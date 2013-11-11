@@ -141,7 +141,6 @@ public class MainActivity extends ActionBarActivity
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            Log.d(APPTAG, "view created");
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
             if (brainDescription == null)
@@ -158,8 +157,6 @@ public class MainActivity extends ActionBarActivity
             super.onAttach(activity);
             ((MainActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
-            Log.d(APPTAG, "attached");
-//            setBrainData(getArguments().getString(ARG_BRAIN_SECTION));
         }
     }
 

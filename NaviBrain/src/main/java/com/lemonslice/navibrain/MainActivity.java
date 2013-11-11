@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -110,8 +111,18 @@ public class MainActivity extends ActionBarActivity
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
-        private static HashMap<Integer, BrainFragment> brainFragmentCache = new HashMap<Integer, BrainFragment>();
+        /**
+         * Sparse array (as in an array that isn't always full) to cache the BrainFragments such
+         * that they're not requested every time the user changes view.
+         */
+        private static SparseArray<BrainFragment> brainFragmentCache = new SparseArray<BrainFragment>(4);
 
+        /**
+         * Return a BrainFragment for the given sectionNumber, filling the cache if empty
+         * or returning the cached version if not.
+         * @param sectionNumber
+         * @return
+         */
         public static BrainFragment getInstance(int sectionNumber) {
             if (brainFragmentCache.get(sectionNumber) == null) {
                 brainFragmentCache.put(sectionNumber, newInstance(sectionNumber));

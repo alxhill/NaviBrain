@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -57,7 +59,7 @@ public class MainActivity extends ActionBarActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, BrainFragment.newInstance(position + 1))
+                .replace(R.id.container, BrainFragment.getInstance(position + 1))
                 .commit();
     }
 
@@ -107,6 +109,15 @@ public class MainActivity extends ActionBarActivity
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+
+        private static HashMap<Integer, BrainFragment> brainFragmentCache = new HashMap<Integer, BrainFragment>();
+
+        public static BrainFragment getInstance(int sectionNumber) {
+            if (brainFragmentCache.get(sectionNumber) == null) {
+                brainFragmentCache.put(sectionNumber, newInstance(sectionNumber));
+            }
+            return brainFragmentCache.get(sectionNumber);
+        }
 
         /**
          * Returns a new instance of this fragment for the given section

@@ -5,15 +5,19 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by alexander on 11/11/2013.
+ * BrainData stores name, description and subsections of the brain.
+ *
+ * Subsections of the brain are stored as other BrainData objects. This is not yet used.
  */
 public class BrainData {
 
     /**
-     * Static method to get a reference to the brain data
+     * Static method to get BrainData for a specific section of the brain - e.g Frontal Lobe
      */
     private static HashMap<String,BrainData> globalBrainData;
     public static BrainData getBrainData(String section) {
+        // set the global brain data if it hasn't been created yet.
+        // this may be stored in xml (please no) or a database in future.
         if (globalBrainData == null) {
             globalBrainData = new HashMap<String, BrainData>();
 

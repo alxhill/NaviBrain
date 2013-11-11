@@ -1,27 +1,18 @@
 package com.lemonslice.navibrain;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -42,8 +33,11 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // gets the brain lobes list in /res/values/strings.xml
         brainLobes = getResources().getStringArray(R.array.brain_lobes);
 
+        /// --- android boilerplate stuff --- ///
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -63,7 +57,7 @@ public class MainActivity extends ActionBarActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .replace(R.id.container, BrainFragment.newInstance(position + 1))
                 .commit();
     }
 
@@ -107,47 +101,46 @@ public class MainActivity extends ActionBarActivity
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class BrainFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-        private static final String ARG_BRAIN_SECTION = "brain_section";
 
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
+        public static BrainFragment newInstance(int sectionNumber) {
+            BrainFragment fragment = new BrainFragment();
             Bundle args = new Bundle();
+
+            // send the section number to the fragment when it's created.
             args.putInt(ARG_SECTION_NUMBER, sectionNumber-1);
-            args.putString(ARG_BRAIN_SECTION, brainLobes[sectionNumber-1]);
+
             fragment.setArguments(args);
 
             return fragment;
         }
 
-        private TextView brainDescription;
-
-        public PlaceholderFragment() {
-        }
-
-        private void setBrainData(String brainSection)
-        {
-            brainDescription.setText(BrainData.getBrainData(brainSection).getDescription());
+        public BrainFragment() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-            if (brainDescription == null)
-                brainDescription = (TextView) rootView.findViewById(R.id.brainDescription);
+            // get a reference to the text box in the fragment
+            TextView brainDescription = (TextView) rootView.findViewById(R.id.brain_description);
 
-            String brainSection = getArguments().getString(ARG_BRAIN_SECTION);
-            setBrainData(brainSection);
+            // get the section to display using the brainLobes data from the outer class,
+            // and the section number argument from newInstance.
+            String brainSection = brainLobes[getArguments().getInt(ARG_SECTION_NUMBER)];
+
+            // update the text of the fragment so it shows brain data for the correct section
+            // see BrainData.java to understand where the data is
+            brainDescription.setText(BrainData.getBrainData(brainSection).getDescription());
 
             return rootView;
         }
@@ -155,8 +148,9 @@ public class MainActivity extends ActionBarActivity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
+
+            // sends the section number to the main view so it can update the title, see outer class
+            ((MainActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
 

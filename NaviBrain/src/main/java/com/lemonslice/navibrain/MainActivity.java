@@ -19,6 +19,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -34,8 +38,12 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
+    private static String[] brainLobes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        brainLobes = getResources().getStringArray(R.array.brain_lobes);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -60,17 +68,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
+        mTitle = brainLobes[number];
     }
 
     public void restoreActionBar() {
@@ -115,6 +113,7 @@ public class MainActivity extends ActionBarActivity
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+        private static final String ARG_BRAIN_SECTION = "brain_section";
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -123,37 +122,34 @@ public class MainActivity extends ActionBarActivity
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber-1);
+            args.putString(ARG_BRAIN_SECTION, brainLobes[sectionNumber-1]);
             fragment.setArguments(args);
 
             return fragment;
         }
 
+        private TextView brainDescription;
+
         public PlaceholderFragment() {
         }
 
+        private void setBrainData(String brainSection)
+        {
+            brainDescription.setText(BrainData.getBrainData(brainSection).getDescription());
+        }
+
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            Log.d(APPTAG, "view created");
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-//            final EditText textInput = (EditText) rootView.findViewById(R.id.editText);
-            final Context ctx = rootView.getContext();
+            if (brainDescription == null)
+                brainDescription = (TextView) rootView.findViewById(R.id.brainDescription);
 
-            Button button = (Button) rootView.findViewById(R.id.button);
+            String brainSection = getArguments().getString(ARG_BRAIN_SECTION);
+            setBrainData(brainSection);
 
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    EditText textInput =  (EditText) getView().findViewById(R.id.editText);
-                    Intent intent = new Intent(ctx, SecondActivity.class);
-                    intent.putExtra("userText", textInput.getText().toString());
-                    startActivity(intent);
-                }
-            });
-
-//            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-//            textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
 
@@ -162,6 +158,8 @@ public class MainActivity extends ActionBarActivity
             super.onAttach(activity);
             ((MainActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
+            Log.d(APPTAG, "attached");
+//            setBrainData(getArguments().getString(ARG_BRAIN_SECTION));
         }
     }
 

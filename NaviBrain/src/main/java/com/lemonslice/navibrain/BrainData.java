@@ -21,10 +21,10 @@ public class BrainData {
         if (globalBrainData == null) {
             globalBrainData = new HashMap<String, BrainData>();
 
-            BrainData frontal = new BrainData("Frontal Lobe", "associated with reasoning, planning, parts of speech, movement, emotions, and problem solving");
-            BrainData parietal = new BrainData("Parietal Lobe", "associated with movement, orientation, recognition, perception of stimuli");
-            BrainData occipital = new BrainData("Occipital Lobe", "associated with visual processing");
-            BrainData temporal = new BrainData("Temporal Lobe", "associated with perception and recognition of auditory stimuli, memory, and speech");
+            BrainData frontal = new BrainData("Frontal Lobe", R.drawable.frontal, "associated with reasoning, planning, parts of speech, movement, emotions, and problem solving");
+            BrainData parietal = new BrainData("Parietal Lobe", R.drawable.parietal, "associated with movement, orientation, recognition, perception of stimuli");
+            BrainData occipital = new BrainData("Occipital Lobe", R.drawable.occipital, "associated with visual processing");
+            BrainData temporal = new BrainData("Temporal Lobe", R.drawable.temporal, "associated with perception and recognition of auditory stimuli, memory, and speech");
 
             globalBrainData.put("Frontal Lobe", frontal);
             globalBrainData.put("Parietal Lobe", parietal);
@@ -35,14 +35,16 @@ public class BrainData {
     }
 
     private String name;
+    private int imageResource;
     private String description;
 
     private List<BrainData> subsections;
 
-    public BrainData(String name, String description) {
+    public BrainData(String name, int imageResource, String description) {
         subsections = new ArrayList<BrainData>();
         this.name = name;
         this.description = description;
+        this.imageResource = imageResource;
     }
 
     public List<BrainData> getSubsections() {
@@ -68,4 +70,6 @@ public class BrainData {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public int getImageResource() {return imageResource; }
 }

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -153,16 +154,19 @@ public class MainActivity extends ActionBarActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-            // get a reference to the text box in the fragment
+            // get a reference to the views in the fragment
             TextView brainDescription = (TextView) rootView.findViewById(R.id.brain_description);
+            ImageView brainImage = (ImageView) rootView.findViewById(R.id.brain_image);
 
             // get the section to display using the brainLobes data from the outer class,
             // and the section number argument from newInstance.
             String brainSection = brainLobes[getArguments().getInt(ARG_SECTION_NUMBER)];
+            BrainData data = BrainData.getBrainData(brainSection);
 
-            // update the text of the fragment so it shows brain data for the correct section
+            // update the views of the fragment so it shows brain data for the correct section
             // see BrainData.java to understand where the data is
-            brainDescription.setText(BrainData.getBrainData(brainSection).getDescription());
+            brainDescription.setText(data.getDescription());
+            brainImage.setImageResource(data.getImageResource());
 
             return rootView;
         }
